@@ -52,7 +52,7 @@ public class Main {
 ////            }
 //            return arr1;
 //        });
-        JavaPairRDD<Pair<Integer, Integer>, String> output = schedulePair.mapValues(arr -> "Max delay=" + arr[0] + "; Percent of delays = " + arr[2] + "; Percent of cancelled = " + arr[3] + ";" + count);
+        JavaPairRDD<Pair<Integer, Integer>, String> output = schedulePair.mapValues(arr -> "Max delay=" + arr[0] + "; Percent of delays = " + arr[1] + "; Percent of cancelled = " + arr[3] + ";" + count);
 //
         output.saveAsTextFile(args[2]);
     }
