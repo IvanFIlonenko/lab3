@@ -49,7 +49,7 @@ public class Main {
             arr1[4] += arr2[4];
             return arr1;
         });
-        JavaPairRDD<Pair<Integer, Integer>, String> output = schedulePair.mapValues(arr -> "Max delay=" + arr[0] + "; Percent of delays = " + arr[2]/arr[4] * 100 + "; Percent of cancelled = " + arr[3]/arr[4] * 100 + ";" + arr[4]);
+        JavaPairRDD<Pair<Integer, Integer>, String> output = schedulePair.mapValues(arr -> "Max delay=" + arr[0] + "; Percent of delays = " + arr[2]/arr[4] * 100 + "%; Percent of cancelled = " + arr[3]/arr[4] * 100 + "%;" + arr[4]);
 //
         output.saveAsTextFile(args[2]);
     }
