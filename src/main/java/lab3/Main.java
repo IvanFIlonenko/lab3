@@ -11,8 +11,8 @@ public class Main {
         SparkConf conf = new SparkConf().setAppName("lab3");
         JavaSparkContext sc = new JavaSparkContext(conf);
         JavaRDD<String> airports = sc.textFile("L_AIRPORT_ID.csv");
-        JavaRDD<String> schedule = sc.textFile(args[1]);
+        JavaRDD<String> schedule = sc.textFile("664600583_T_ONTIME_sample.csv");
         JavaRDD<String> splitted = airports.flatMap(s -> Arrays.stream(s.split("\t")).iterator());
-        splitted.saveAsTextFile(args[2]);
+        splitted.saveAsTextFile("output.txt");
     }
 }
