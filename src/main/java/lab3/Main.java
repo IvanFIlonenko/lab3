@@ -32,7 +32,7 @@ public class Main {
         JavaPairRDD<Integer, String> airportsPair = airports.mapToPair(s -> new Tuple2<>(Integer.parseInt(s.split(",",2)[0]), s.split(",",2)[1]));
         JavaPairRDD<Pair<Integer, Integer>, ArrayList<Integer>> schedulePair = schedule.mapToPair(s -> {
             if (isNumeric(s.split(",")[19])) {
-                return new Tuple2<>(new Pair<>(Integer.parseInt(s.split(",")[11]),Integer.parseInt(s.split(",")[14])), new ArrayList<Integer>);
+                return new Tuple2<>(new Pair<>(Integer.parseInt(s.split(",")[11]),Integer.parseInt(s.split(",")[14])), new ArrayList<Integer>());
             } else {
                 return new Tuple2<>(new Pair<>(Integer.parseInt(s.split(",")[11]),Integer.parseInt(s.split(",")[14])), new Pair<>(Integer.parseInt(s.split(",")[17]),1));
             }
