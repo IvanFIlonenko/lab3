@@ -37,23 +37,22 @@ public class Main {
                 return new Tuple2<>(new Pair<>(Integer.parseInt(s.split(",")[11]),Integer.parseInt(s.split(",")[14])), new float[]{0,1,0,0});
             }
         });
-//        JavaPairRDD<Pair<Integer, Integer>, String> schedulePair = schedule.mapToPair(s -> new Tuple2<>(new Pair<>(Integer.parseInt(s.split(",")[11]),Integer.parseInt(s.split(",")[14])), s.split(",")[17]));
         long count = schedulePair.count();
-//        schedulePair = schedulePair.filter(pair -> pair._2[0] < 0);
-//        schedulePair = schedulePair.reduceByKey((arr1,arr2) -> {
-//            arr1[3] = arr1[3] + arr1[1] + arr2[1];
-//            if (arr1[1] == 0 && arr1[0] > 0) {
-//                arr1[2] += 1;
-//            }
-//            if (arr2[1] == 0 && arr2[0] > 0) {
-//                arr1[2] += 1;
-//            }
-////            if (arr1[0] <= arr2[0]) {
-////                arr1[0] = arr2[0];
-////            }
-//            return arr1;
-//        });
-        JavaPairRDD<Pair<Integer, Integer>, String> output = schedulePair.mapValues(arr -> "Max delay=" + arr[0] + "; Percent of delays = " + arr[1] + "; Percent of cancelled = " + arr[3] + ";" + count);
+        schedulePair = schedulePair.filter(pair -> pair._2[0] < 0);
+        schedulePair = schedulePair.reduceByKey((arr1,arr2) -> {
+            arr1[3] = arr1[3] + arr1[1] + arr2[1];
+            if (arr1[1] == 0 && arr1[0] > 0) {
+                arr1[2] += 1;
+            }
+            if (arr2[1] == 0 && arr2[0] > 0) {
+                arr1[2] += 1;
+            }
+            if (arr1[0] <= arr2[0]) {
+                arr1[0] = arr2[0];
+            }
+            return arr1;
+        });
+        JavaPairRDD<Pair<Integer, Integer>, String> output = schedulePair.mapValues(arr -> "Max delay=" + arr[0] + "; Percent of delays = " + arr[2] + "; Percent of cancelled = " + arr[3] + ";" + count);
 //
         output.saveAsTextFile(args[2]);
     }
