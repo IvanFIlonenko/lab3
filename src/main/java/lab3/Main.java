@@ -15,7 +15,7 @@ public class Main {
         JavaRDD<String> airports = sc.textFile(args[0]);
         JavaRDD<String> schedule = sc.textFile(args[1]);
         JavaRDD<String> splitted = airports.flatMap(s -> Arrays.stream(s.split("\t")).iterator());
-        JavaPairRDD<Integer, String> splittedCount = splitted.mapToPair(s -> new Tuple2<>(1, s));
+        JavaPairRDD<Integer, String> splittedCount = splitted.mapToPair(s -> new Tuple2<>(, s));
         splittedCount.saveAsTextFile(args[2]);
     }
 }
