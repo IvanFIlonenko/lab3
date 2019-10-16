@@ -18,7 +18,7 @@ public class Main {
         airports = airports.filter(line -> !line.equals(header1));
         JavaRDD<String> schedule = sc.textFile(args[1]).flatMap(s -> Arrays.stream(s.split("\t")).iterator());
         final String header2 = schedule.first();
-        schedule = schedule.filter(line -> !line.equals(header1));
+        schedule = schedule.filter(line -> !line.equals(header2));
         JavaPairRDD<Integer, String> airportsPair = airports.mapToPair(s -> new Tuple2<>(Integer.parseInt(s.split(",",2)[0]), s.split(",",2)[1]));
         JavaPairRDD<Pair<Integer, Integer>, Pair<String,String>> SchedulePair = schedule.mapToPair(s -> new Tuple2<>(new Pair<>(Integer.parseInt(s.split(",")[11]),Integer.parseInt(s.split(",")[14])), new Pair<>(s.split(",")[17], s.split(",")[16])));
         SchedulePair.saveAsTextFile(args[2]);
