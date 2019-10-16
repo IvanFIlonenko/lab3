@@ -30,14 +30,14 @@ public class Main {
         final String header2 = schedule.first();
         schedule = schedule.filter(line -> !line.equals(header2));
         JavaPairRDD<Integer, String> airportsPair = airports.mapToPair(s -> new Tuple2<>(Integer.parseInt(s.split(",",2)[0]), s.split(",",2)[1]));
-        JavaPairRDD<Pair<Integer, Integer>, int[]> schedulePair = schedule.mapToPair(s -> {
-            if (s.split(",")[20].length() > 0) {
-                return new Tuple2<>(new Pair<>(Integer.parseInt(s.split(",")[11]),Integer.parseInt(s.split(",")[14])), new int[]{0,1,0,0});
-            } else {
-                return new Tuple2<>(new Pair<>(Integer.parseInt(s.split(",")[11]),Integer.parseInt(s.split(",")[14])), new int[]{Integer.parseInt(s.split(",")[17]),0,0,0});
-            }
-        });
-        long count = schedulePair.count();
+//        JavaPairRDD<Pair<Integer, Integer>, int[]> schedulePair = schedule.mapToPair(s -> {
+//            if (s.split(",")[20].length() > 0) {
+//                return new Tuple2<>(new Pair<>(Integer.parseInt(s.split(",")[11]),Integer.parseInt(s.split(",")[14])), new int[]{0,1,0,0});
+//            } else {
+//                return new Tuple2<>(new Pair<>(Integer.parseInt(s.split(",")[11]),Integer.parseInt(s.split(",")[14])), new int[]{Integer.parseInt(s.split(",")[17]),0,0,0});
+//            }
+//        });
+//        long count = schedulePair.count();
 //        schedulePair = schedulePair.filter(pair -> pair._2[0] < 0);
 //        schedulePair = schedulePair.reduceByKey((arr1,arr2) -> {
 //            arr1[3] = arr1[3] + arr1[1] + arr2[1];
@@ -52,8 +52,8 @@ public class Main {
 ////            }
 //            return arr1;
 //        });
-        JavaPairRDD<Pair<Integer, Integer>, String> output = schedulePair.mapValues(arr -> "Max delay=" + arr[0] + "; Percent of delays = " + arr[1] + "; Percent of cancelled = " + arr[3] + ";" + count);
+//        JavaPairRDD<Pair<Integer, Integer>, String> output = schedulePair.mapValues(arr -> "Max delay=" + arr[0] + "; Percent of delays = " + arr[1] + "; Percent of cancelled = " + arr[3] + ";" + count);
 //
-        output.saveAsTextFile(args[2]);
+        schedule.saveAsTextFile(args[2]);
     }
 }
