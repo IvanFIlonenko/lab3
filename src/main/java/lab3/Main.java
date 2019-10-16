@@ -10,7 +10,7 @@ public class Main {
     public static void main(String[] args){
         SparkConf conf = new SparkConf().setAppName("lab3");
         JavaSparkContext sc = new JavaSparkContext(conf);
-        JavaRDD<String> airports = sc.textFile(args[0]);
+        JavaRDD<String> airports = sc.textFile("L_AIRPORT_ID.csv");
         JavaRDD<String> schedule = sc.textFile(args[1]);
         JavaRDD<String> splitted = airports.flatMap(s -> Arrays.stream(s.split("\t")).iterator());
         splitted.saveAsTextFile(args[2]);
