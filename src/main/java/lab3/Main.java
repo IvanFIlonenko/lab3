@@ -45,7 +45,7 @@ public class Main {
                 arr1[2] += 1;
             }
             if (arr2[1] == 0 && arr2[0] > 0) {
-                arr2[2] += 1;
+                arr1[2] += 1;
             }
             if (arr1[0] <= arr2[0]) {
                 arr1[0] = arr2[0];
