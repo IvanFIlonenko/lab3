@@ -12,8 +12,8 @@ public class Main {
         JavaSparkContext sc = new JavaSparkContext(conf);
         JavaRDD<String> airports = sc.textFile(args[0]);
         JavaRDD<String> schedule = sc.textFile(args[1]);
-        JavaRDD<String> splitted = airports.flatMap(s -> Arrays.stream(s.split("\t")).iterator());
-        
+        JavaRDD<String> splitted = airports.flatMap(s -> Arrays.stream(s.split("\t")).iterator()).flatMap(s -> Arrays.stream(s.split(",")).iterator());
+
         airports.saveAsTextFile(args[2]);
     }
 }
