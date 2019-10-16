@@ -38,8 +38,8 @@ public class Main {
             }
         });
         long count = schedulePair.count();
-        schedulePair.filter(pair -> pair._2[0] >= 0);
-        schedulePair.reduceByKey((arr1,arr2) -> {
+        schedulePair = schedulePair.filter(pair -> pair._2[0] >= 0);
+        schedulePair = schedulePair.reduceByKey((arr1,arr2) -> {
             arr1[3] = arr1[3] + arr1[1] + arr2[1];
             if (arr1[1] == 0 && arr1[0] > 0) {
                 arr1[2] += 1;
