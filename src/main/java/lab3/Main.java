@@ -34,7 +34,7 @@ public class Main {
             if (s.split(",")[19].length() > 0) {
                 return new Tuple2<>(new Pair<>(Integer.parseInt(s.split(",")[11]),Integer.parseInt(s.split(",")[14])), new int[]{0,1,0,0});
             } else {
-                return new Tuple2<>(new Pair<>(Integer.parseInt(s.split(",")[11]),Integer.parseInt(s.split(",")[14])), new int[]{Integer.parseInt(s.split(",")[17]),1,0,0});
+                return new Tuple2<>(new Pair<>(Integer.parseInt(s.split(",")[11]),Integer.parseInt(s.split(",")[14])), new int[]{Integer.parseInt(s.split(",")[17]),0,0,0});
             }
         });
         long count = schedulePair.count();
