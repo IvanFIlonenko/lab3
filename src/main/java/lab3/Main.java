@@ -32,15 +32,13 @@ public class Main {
         JavaPairRDD<Integer, String> airportsPair = airports.mapToPair(s -> new Tuple2<>(Integer.parseInt(s.split(",",2)[0]), s.split(",",2)[1]));
         JavaPairRDD<Pair<Integer, Integer>, int[]> schedulePair = schedule.mapToPair(s -> {
             if (isNumeric(s.split(",")[19])) {
-                return new Tuple2<>(new Pair<>(Integer.parseInt(s.split(",")[11]),Integer.parseInt(s.split(",")[14])), new int[](Arrays.asList(0,1)));
+                return new Tuple2<>(new Pair<>(Integer.parseInt(s.split(",")[11]),Integer.parseInt(s.split(",")[14])), new int[]{0,1,0,0});
             } else {
-                return new Tuple2<>(new Pair<>(Integer.parseInt(s.split(",")[11]),Integer.parseInt(s.split(",")[14])), new ArrayList<>(Arrays.asList(Integer.parseInt(s.split(",")[17]),1)));
+                return new Tuple2<>(new Pair<>(Integer.parseInt(s.split(",")[11]),Integer.parseInt(s.split(",")[14])), new int[]{Integer.parseInt(s.split(",")[17]),1,0,0});
             }
         });
-        schedulePair.reduceByKey((list1,list2) -> {
-            if ( list1.get(1)== 0 && pair2.getValue().length() == 0){
-
-            }
+        schedulePair.reduceByKey((arr1,arr2) -> {
+            
         })
         schedulePair.saveAsTextFile(args[2]);
     }
