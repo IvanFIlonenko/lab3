@@ -20,10 +20,13 @@ public class Main {
         final String header2 = schedule.first();
         schedule = schedule.filter(line -> !line.equals(header2));
         JavaPairRDD<Integer, String> airportsPair = airports.mapToPair(s -> new Tuple2<>(Integer.parseInt(s.split(",",2)[0]), s.split(",",2)[1]));
-        JavaPairRDD<Pair<Integer, Integer>, Pair<String,String>> schedulePair = schedule.mapToPair(s -> new Tuple2<>(new Pair<>(Integer.parseInt(s.split(",")[11]),Integer.parseInt(s.split(",")[14])), new Pair<>(s.split(",")[17], s.split(",")[19])));
+        JavaPairRDD<Pair<Integer, Integer>, Pair<Integer,Integer>> schedulePair = schedule.mapToPair(s -> new Tuple2<>({
+                if ()
+        }
+                new Pair<>({Integer.parseInt(s.split(",")[11]),Integer.parseInt(s.split(",")[14])), new Pair<>(s.split(",")[17], s.split(",")[19])));
         schedulePair.reduceByKey((pair1,pair2) -> {
             if (pair1.getValue().length() == 0 && pair2.getValue().length() == 0){
-                
+
             }
         })
         schedulePair.saveAsTextFile(args[2]);
