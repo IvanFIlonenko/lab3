@@ -12,10 +12,10 @@ public class Main {
     public static void main(String[] args){
         SparkConf conf = new SparkConf().setAppName("lab3");
         JavaSparkContext sc = new JavaSparkContext(conf);
-        JavaRDD<String> airports = sc.textFile(args[0]);
-        JavaRDD<String> schedule = sc.textFile(args[1]);
-        JavaRDD<String> splitted = airports.flatMap(s -> Arrays.stream(s.split("\t")).iterator());
-        JavaPairRDD<Integer, String> splittedCount = splitted.mapToPair(s -> new Tuple2<>(, s));
+        JavaRDD<String> airports = sc.textFile(args[0]).flatMap(s -> Arrays.stream(s.split("\t")).iterator());
+        JavaRDD<String> schedule = sc.textFile(args[1]).flatMap(s -> Arrays.stream(s.split("\t")).iterator());
+        JavaPairRDD<Integer, String> airportsPair = airports.mapToPair(s -> new Tuple2<>(Integer.parseInt(s.split(",",2)[0]), s.split(",",2)[1]));
+        JavaPairRDD<Integer, String> SchedulePair = schedule.mapToPair(s -> new Tuple2<>(Integer.parseInt(s.split(",")[14]), s.split(",")[17]));
         splittedCount.saveAsTextFile(args[2]);
     }
 }
