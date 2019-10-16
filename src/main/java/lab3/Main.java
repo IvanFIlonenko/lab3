@@ -10,6 +10,15 @@ import scala.Tuple2;
 import java.util.Arrays;
 
 public class Main {
+    public static boolean isNumeric(String str) {
+        try {
+            Double.parseDouble(str);
+            return true;
+        } catch(NumberFormatException e){
+            return false;
+        }
+    }
+
     public static void main(String[] args){
         SparkConf conf = new SparkConf().setAppName("lab3");
         JavaSparkContext sc = new JavaSparkContext(conf);
@@ -20,10 +29,13 @@ public class Main {
         final String header2 = schedule.first();
         schedule = schedule.filter(line -> !line.equals(header2));
         JavaPairRDD<Integer, String> airportsPair = airports.mapToPair(s -> new Tuple2<>(Integer.parseInt(s.split(",",2)[0]), s.split(",",2)[1]));
-        JavaPairRDD<Pair<Integer, Integer>, Pair<Integer,Integer>> schedulePair = schedule.mapToPair(s -> new Tuple2<>({
-                if ()
-        }
-                new Pair<>({Integer.parseInt(s.split(",")[11]),Integer.parseInt(s.split(",")[14])), new Pair<>(s.split(",")[17], s.split(",")[19])));
+        JavaPairRDD<Pair<Integer, Integer>, Pair<Integer,Integer>> schedulePair = schedule.mapToPair(s -> {
+            if (isNumeric(s.split(",")[19])) {
+                return new Tuple2<>(new Pair<>(Integer.parseInt(s.split(",")[11]),Integer.parseInt(s.split(",")[14])), new Pair<>(0,1));
+            } else {
+                return new Tuple2<>(new Pair<>(Integer.parseInt(s.split(",")[11]),Integer.parseInt(s.split(",")[14])), new Pair<>(Integer.parseInt(s.split(",")[17]),1));
+            }
+        });
         schedulePair.reduceByKey((pair1,pair2) -> {
             if (pair1.getValue().length() == 0 && pair2.getValue().length() == 0){
 
