@@ -39,7 +39,6 @@ public class Main {
         });
         long count = schedulePair.count();
         schedulePair = schedulePair.filter(pair -> pair._2[0] >= 0);
-        schedulePair.saveAsTextFile(args[2]);
 //        schedulePair = schedulePair.reduceByKey((arr1,arr2) -> {
 //            arr1[3] = arr1[3] + arr1[1] + arr2[1];
 //            if (arr1[1] == 0 && arr1[0] > 0) {
@@ -53,8 +52,8 @@ public class Main {
 ////            }
 //            return arr1;
 //        });
-//        JavaPairRDD<Pair<Integer, Integer>, String> output = schedulePair.mapValues(arr -> "Max delay=" + arr[0] + "; Percent of delays = " + arr[2] + "; Percent of cancelled = " + arr[3] + ";" + count);
+        JavaPairRDD<Pair<Integer, Integer>, String> output = schedulePair.mapValues(arr -> "Max delay=" + arr[0] + "; Percent of delays = " + arr[2] + "; Percent of cancelled = " + arr[3] + ";" + count);
 //
-//        output.saveAsTextFile(args[2]);
+        output.saveAsTextFile(args[2]);
     }
 }
