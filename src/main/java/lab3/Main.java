@@ -32,7 +32,7 @@ public class Main {
         JavaPairRDD<Integer, String> airportsPair = airports.mapToPair(s -> new Tuple2<>(Integer.parseInt(s.split(",",2)[0]), s.split(",",2)[1]));
         JavaPairRDD<Pair<Integer, Integer>, float[]> schedulePair = schedule.mapToPair(s -> {
             if (s.split(",")[17].length() > 0) {
-                return new Tuple2<>(new Pair<>(Integer.parseInt(s.split(",")[11]),Integer.parseInt(s.split(",")[14])), new float[]{Float.parseFloat(s.split(",")[17]),0,0,0});
+                return new Tuple2<>(new Pair<>(Integer.parseInt(s.split(",")[11]),Integer.parseInt(s.split(",")[14])), new float[]{Float.parseFloat(s.split(",")[17]),0,1,0});
             } else {
                 return new Tuple2<>(new Pair<>(Integer.parseInt(s.split(",")[11]),Integer.parseInt(s.split(",")[14])), new float[]{0,1,0,0});
             }
@@ -41,9 +41,6 @@ public class Main {
         schedulePair = schedulePair.filter(pair -> pair._2[0] >= 0);
         schedulePair = schedulePair.reduceByKey((arr1,arr2) -> {
             arr1[3] = arr1[3] + arr1[1] + arr2[1];
-            if (arr1[1] == 0 && arr1[0] > 0) {
-                arr1[2] += 1;
-            }
             if (arr2[1] == 0 && arr2[0] > 0) {
                 arr1[2] += 1;
             }
