@@ -52,6 +52,8 @@ public class Main {
             }
             return arr1;
         });
-        schedulePair.saveAsTextFile(args[2]);
+        JavaPairRDD<Pair<Integer, Integer>, String> output = schedulePair.mapValues(arr -> "Max delay=" + arr[0] + "; Percent of delays = " + arr[2]/count + "; Percent of cancelled = " + arr[3]/count + ";");
+
+        output.saveAsTextFile(args[2]);
     }
 }
