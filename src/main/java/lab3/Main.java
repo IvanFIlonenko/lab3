@@ -47,9 +47,9 @@ public class Main {
             if (arr2[1] == 0 && arr2[0] > 0) {
                 arr1[2] += 1;
             }
-            if (arr1[0] <= arr2[0]) {
-                arr1[0] = arr2[0];
-            }
+//            if (arr1[0] <= arr2[0]) {
+//                arr1[0] = arr2[0];
+//            }
             return arr1;
         });
         JavaPairRDD<Pair<Integer, Integer>, String> output = schedulePair.mapValues(arr -> "Max delay=" + arr[0] + "; Percent of delays = " + arr[2] + "; Percent of cancelled = " + arr[3] + ";" + count);
