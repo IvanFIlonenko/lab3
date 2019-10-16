@@ -13,6 +13,5 @@ public class Main {
         JavaRDD<String> airports = sc.textFile("L_AIRPORT_ID.csv");
         JavaRDD<String> schedule = sc.textFile("664600583_T_ONTIME_sample.csv");
         JavaRDD<String> splitted = airports.flatMap(s -> Arrays.stream(s.split("\t")).iterator());
-        splitted.saveAsTextFile("output.txt");
     }
 }
