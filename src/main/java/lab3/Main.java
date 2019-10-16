@@ -37,6 +37,7 @@ public class Main {
 //                return new Tuple2<>(new Pair<>(Integer.parseInt(s.split(",")[11]),Integer.parseInt(s.split(",")[14])), new int[]{Integer.parseInt(s.split(",")[17]),0,0,0});
 //            }
 //        });
+        JavaPairRDD<Pair<Integer, Integer>, String> schedulePair = schedule.mapToPair(s -> new Tuple2<>(new Pair<>(Integer.parseInt(s.split(",")[11]),Integer.parseInt(s.split(",")[14])), s.split(",")[17]));
 //        long count = schedulePair.count();
 //        schedulePair = schedulePair.filter(pair -> pair._2[0] < 0);
 //        schedulePair = schedulePair.reduceByKey((arr1,arr2) -> {
@@ -54,6 +55,6 @@ public class Main {
 //        });
 //        JavaPairRDD<Pair<Integer, Integer>, String> output = schedulePair.mapValues(arr -> "Max delay=" + arr[0] + "; Percent of delays = " + arr[1] + "; Percent of cancelled = " + arr[3] + ";" + count);
 //
-        schedule.saveAsTextFile(args[2]);
+        schedulePair.saveAsTextFile(args[2]);
     }
 }
