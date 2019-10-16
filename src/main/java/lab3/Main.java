@@ -7,6 +7,7 @@ import org.apache.spark.api.java.JavaRDD;
 import org.apache.spark.api.java.JavaSparkContext;
 import scala.Tuple2;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 
 public class Main {
@@ -29,9 +30,9 @@ public class Main {
         final String header2 = schedule.first();
         schedule = schedule.filter(line -> !line.equals(header2));
         JavaPairRDD<Integer, String> airportsPair = airports.mapToPair(s -> new Tuple2<>(Integer.parseInt(s.split(",",2)[0]), s.split(",",2)[1]));
-        JavaPairRDD<Pair<Integer, Integer>, Pair<Integer,Integer>> schedulePair = schedule.mapToPair(s -> {
+        JavaPairRDD<Pair<Integer, Integer>, ArrayList<Integer>> schedulePair = schedule.mapToPair(s -> {
             if (isNumeric(s.split(",")[19])) {
-                return new Tuple2<>(new Pair<>(Integer.parseInt(s.split(",")[11]),Integer.parseInt(s.split(",")[14])), new Pair<>(0,1));
+                return new Tuple2<>(new Pair<>(Integer.parseInt(s.split(",")[11]),Integer.parseInt(s.split(",")[14])), new ArrayList<Integer>);
             } else {
                 return new Tuple2<>(new Pair<>(Integer.parseInt(s.split(",")[11]),Integer.parseInt(s.split(",")[14])), new Pair<>(Integer.parseInt(s.split(",")[17]),1));
             }
