@@ -32,13 +32,13 @@ public class Main {
         JavaPairRDD<Integer, String> airportsPair = airports.mapToPair(s -> new Tuple2<>(Integer.parseInt(s.split(",",2)[0]), s.split(",",2)[1]));
         JavaPairRDD<Pair<Integer, Integer>, ArrayList<Integer>> schedulePair = schedule.mapToPair(s -> {
             if (isNumeric(s.split(",")[19])) {
-                return new Tuple2<>(new Pair<>(Integer.parseInt(s.split(",")[11]),Integer.parseInt(s.split(",")[14])), new ArrayList<Integer>());
+                return new Tuple2<>(new Pair<>(Integer.parseInt(s.split(",")[11]),Integer.parseInt(s.split(",")[14])), new ArrayList<>(Arrays.asList(0,1)));
             } else {
-                return new Tuple2<>(new Pair<>(Integer.parseInt(s.split(",")[11]),Integer.parseInt(s.split(",")[14])), new Pair<>(Integer.parseInt(s.split(",")[17]),1));
+                return new Tuple2<>(new Pair<>(Integer.parseInt(s.split(",")[11]),Integer.parseInt(s.split(",")[14])), new ArrayList<>(Arrays.asList(Integer.parseInt(s.split(",")[17]),1)));
             }
         });
-        schedulePair.reduceByKey((pair1,pair2) -> {
-            if (pair1.getValue().length() == 0 && pair2.getValue().length() == 0){
+        schedulePair.reduceByKey((list1,list2) -> {
+            if ( list1.get(1)== 0 && pair2.getValue().length() == 0){
 
             }
         })
