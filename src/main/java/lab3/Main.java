@@ -50,7 +50,7 @@ public class Main {
             return arr1;
         });
         JavaPairRDD<Pair<Integer, Integer>, String> output = schedulePair.mapValues(arr -> "Max delay=" + arr[0] + "; Percent of delays = " + arr[2]/arr[4] * 100 + "%; Percent of cancelled = " + arr[3]/arr[4] * 100 + "%;" + arr[4]);
-        
+        output.union(airportsPair)
         output.saveAsTextFile(args[2]);
     }
 }
