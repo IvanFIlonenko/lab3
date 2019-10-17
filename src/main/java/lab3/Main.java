@@ -39,7 +39,6 @@ public class Main {
                 return new Tuple2<>(new Pair<>(Integer.parseInt(s.split(",")[11]),Integer.parseInt(s.split(",")[14])), new float[]{0,1,0,0,1});
             }
         });
-        Map<Integer, String> kek = airportsPair.collectAsMap();
         schedulePair = schedulePair.filter(pair -> pair._2[0] >= 0);
         schedulePair = schedulePair.reduceByKey((arr1,arr2) -> {
             arr1[3] = arr1[3] + arr1[1] + arr2[1];
@@ -53,12 +52,14 @@ public class Main {
             return arr1;
         });
         JavaPairRDD<Pair<Integer, Integer>, String> scheduleData = schedulePair.mapValues(arr -> "Max delay=" + arr[0] + "; Percent of delays = " + arr[2]/arr[4] * 100 + "%; Percent of cancelled = " + arr[3]/arr[4] * 100 + "%;" + arr[4]);
+        Map<Integer, String> kek = airportsPair.collectAsMap();
+        final Broadcast<Map<Integer,String>> airportsBroadcasted = sc.broadcast(kek);
         JavaRDD<String> output = scheduleData.map(data -> {
             int airportID1 = data._1.getKey();
             int airportID2 = data._1.getValue();
             String info = data._2;
-            List<String> airportName1 = airportsPair.lookup(airportID1);
-            List<String> airportName2 = airportsPair.lookup(airportID2);
+            String airportName1 = airportsBroadcasted.getValue().get(airportID1);
+            String airportName2 = airportsBroadcasted.getValue().get(airportID2);
             info = airportID1 + " ( " + airportName1.get(0) + " ) -> " + airportID2 + " ( " + airportName2.get(0) + " ) " + info;
             return info;
         });
