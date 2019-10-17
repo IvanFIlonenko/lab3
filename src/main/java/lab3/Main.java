@@ -54,7 +54,7 @@ public class Main {
             int airportID1 = data._1.getKey();
             int airportID2 = data._1.getValue();
             String info = data._2;
-            airportsPair.
+            String airportName1 = airportsPair.lookup(airportID1);
         })
         output.saveAsTextFile(args[2]);
     }
