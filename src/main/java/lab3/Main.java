@@ -26,7 +26,6 @@ public class Main {
         SparkConf conf = new SparkConf().setAppName("lab3");
         JavaSparkContext sc = new JavaSparkContext(conf);
         JavaRDD<String> airports = sc.textFile(args[0]).flatMap(s -> Arrays.stream(s.split("\t")).iterator());
-        Map<Integer, String> kek = sc.
         final String header1 = airports.first();
         airports = airports.filter(line -> !line.equals(header1));
         JavaRDD<String> schedule = sc.textFile(args[1]).flatMap(s -> Arrays.stream(s.split("\t")).iterator());
@@ -40,6 +39,7 @@ public class Main {
                 return new Tuple2<>(new Pair<>(Integer.parseInt(s.split(",")[11]),Integer.parseInt(s.split(",")[14])), new float[]{0,1,0,0,1});
             }
         });
+        Map<Integer, String> kek = airportsPair.collectAsMap();
         schedulePair = schedulePair.filter(pair -> pair._2[0] >= 0);
         schedulePair = schedulePair.reduceByKey((arr1,arr2) -> {
             arr1[3] = arr1[3] + arr1[1] + arr2[1];
