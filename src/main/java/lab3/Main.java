@@ -25,10 +25,42 @@ public class Main {
         return data.filter(line -> !line.equals(header));
     }
 
+    public static String getFromAirports(int pos, String s){
+        String s_sub = s.split(",", 2)[pos];
+        return s_sub.substring(1,s_sub.length() - 1);
+    }
+
+    public static String getFromSchedule(int pos, String s){
+        return s.split(",")[pos];
+    }
+
+    public static String getAirportData(int pos, String s, boolean isAirports){
+        String s_sub = "";
+        if (isAirports){
+            return getFromAirports(pos, s);
+        } else {
+            return getFromSchedule(pos, s);
+        }
+    }
+
     public static Broadcast<Map<Integer,String>> getAirportBroadcasted(JavaSparkContext sc, JavaRDD<String> airports){
-        JavaPairRDD<Integer, String> airportsPair = airports.mapToPair(s -> new Tuple2<>(Integer.parseInt(s.split(",",2)[0].substring(1, s.split(",",2)[0].length() - 1)), s.split(",",2)[1]));
+        JavaPairRDD<Integer, String> airportsPair = airports.mapToPair(s -> new Tuple2<>(Integer.parseInt(getAirportData(0, s, true)), getAirportData(1, s, true)));
         Map<Integer, String> airportsMap = airportsPair.collectAsMap();
         return sc.broadcast(airportsMap);
+    }
+
+    public static JavaPairRDD<Pair<Integer, Integer>, float[]> createSchedulePair(JavaRDD<String> schedule){
+        schedule.mapToPair(s -> {
+            Pair<Integer, Integer> airportsIDs = new Pair<>(Integer.parseInt(getAirportData(11,s,false)),Integer.parseInt(getAirportData(14,s,false)));
+            float[] delayData = new float[]{0,0,0,0,1};
+            if (getAirportData(17, s, false).length() > 0) {
+                delayData[0] = Float.parseFloat(getAirportData(17,s,false));
+                delayData[2] = 1;
+            } else {
+                delayData[1] = 1;
+            }
+            return new Tuple2<>(airportsIDs, delayData);
+        });
     }
 
 
@@ -40,9 +72,9 @@ public class Main {
         final Broadcast<Map<Integer,String>> airportsBroadcasted = getAirportBroadcasted(sc,airports);
         JavaPairRDD<Pair<Integer, Integer>, float[]> schedulePair = schedule.mapToPair(s -> {
             if (s.split(",")[17].length() > 0) {
-                return new Tuple2<>(new Pair<>(Integer.parseInt(s.split(",")[11]),Integer.parseInt(s.split(",")[14])), new float[]{Float.parseFloat(s.split(",")[17]),0,1,0,1});
+                return new Tuple2<>(new Pair<>(Integer.parseInt(getAirportData(11,s,false)),Integer.parseInt(getAirportData(14,s,false))), new float[]{Float.parseFloat(s.split(",")[17]),0,1,0,1});
             } else {
-                return new Tuple2<>(new Pair<>(Integer.parseInt(s.split(",")[11]),Integer.parseInt(s.split(",")[14])), new float[]{0,1,0,0,1});
+                return new Tuple2<>(new Pair<>(Integer.parseInt(getAirportData(11,s,false)),Integer.parseInt(getAirportData(14,s,false))), new float[]{0,1,0,0,1});
             }
         });
         schedulePair = schedulePair.filter(pair -> pair._2[0] >= 0);
