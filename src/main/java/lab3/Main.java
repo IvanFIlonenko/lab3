@@ -5,10 +5,12 @@ import org.apache.spark.SparkConf;
 import org.apache.spark.api.java.JavaPairRDD;
 import org.apache.spark.api.java.JavaRDD;
 import org.apache.spark.api.java.JavaSparkContext;
+import scala.Int;
 import scala.Tuple2;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 public class Main {
     public static boolean isNumeric(String str) {
@@ -54,8 +56,11 @@ public class Main {
             int airportID1 = data._1.getKey();
             int airportID2 = data._1.getValue();
             String info = data._2;
-            String airportName1 = airportsPair.lookup(airportID1);
-        })
+            List<String> airportName1 = airportsPair.lookup(airportID1);
+            List<String> airportName2 = airportsPair.lookup(airportID2);
+            info = airportID1 + " ( " + airportName1 + " ) -> " + airportID2 + " ( " + airportName2 + " ) " + info;
+            return info;
+        });
         output.saveAsTextFile(args[2]);
     }
 }
