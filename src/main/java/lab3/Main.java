@@ -58,7 +58,7 @@ public class Main {
             String info = data._2;
             List<String> airportName1 = airportsPair.lookup(airportID1);
             List<String> airportName2 = airportsPair.lookup(airportID2);
-            info = airportID1 + " ( " + airportName1 + " ) -> " + airportID2 + " ( " + airportName2 + " ) " + info;
+            info = airportID1 + " ( " + airportName1.get(0) + " ) -> " + airportID2 + " ( " + airportName2.get(0) + " ) " + info;
             return info;
         });
         output.saveAsTextFile(args[2]);
