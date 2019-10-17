@@ -60,7 +60,7 @@ public class Main {
             String info = data._2;
             String airportName1 = airportsBroadcasted.getValue().get(airportID1);
             String airportName2 = airportsBroadcasted.getValue().get(airportID2);
-            info = airportID1 + " ( " + airportName1 + " ) -> " + airportID2 + " ( " + airportName2 + " ) " + info;
+            info = airportID1 + " (" + airportName1 + ") -> " + airportID2 + " (" + airportName2 + ") " + info;
             return info;
         });
         output.saveAsTextFile(args[2]);
