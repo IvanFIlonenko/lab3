@@ -13,25 +13,31 @@ import scala.Tuple2;
 import java.util.*;
 
 public class Main {
-    public static boolean isNumeric(String str) {
-        try {
-            Double.parseDouble(str);
-            return true;
-        } catch(NumberFormatException e){
-            return false;
-        }
+    private static final int AIRPORT_ID_POS= 0;
+    private static final int AIRPORT_NAME_POS = 1;
+    private static final int AIRPORT_ID_FROM_POS = 11;
+    private static final int AIRPORT_ID_TO_POS = 14;
+    private static final int DELAY_FLIGHT_POS = 17;
+
+    public static JavaRDD<String> getDataFromFile(JavaSparkContext sc, String path){
+        JavaRDD<String> data = sc.textFile(path).flatMap(s -> Arrays.stream(s.split("\t")).iterator());
+        final String header = data.first();
+        return data.filter(line -> !line.equals(header));
     }
+
+    public static Broadcast<Map<Integer,String>> getAirportBroadcasted(JavaSparkContext sc, JavaRDD<String> airports){
+        JavaPairRDD<Integer, String> airportsPair = airports.mapToPair(s -> new Tuple2<>(Integer.parseInt(s.split(",",2)[0].substring(1, s.split(",",2)[0].length() - 1)), s.split(",",2)[1]));
+        Map<Integer, String> airportsMap = airportsPair.collectAsMap();
+        return sc.broadcast(airportsMap);
+    }
+
 
     public static void main(String[] args){
         SparkConf conf = new SparkConf().setAppName("lab3");
         JavaSparkContext sc = new JavaSparkContext(conf);
-        JavaRDD<String> airports = sc.textFile(args[0]).flatMap(s -> Arrays.stream(s.split("\t")).iterator());
-        final String header1 = airports.first();
-        airports = airports.filter(line -> !line.equals(header1));
-        JavaRDD<String> schedule = sc.textFile(args[1]).flatMap(s -> Arrays.stream(s.split("\t")).iterator());
-        final String header2 = schedule.first();
-        schedule = schedule.filter(line -> !line.equals(header2));
-        JavaPairRDD<Integer, String> airportsPair = airports.mapToPair(s -> new Tuple2<>(Integer.parseInt(s.split(",",2)[0].substring(1, s.split(",",2)[0].length() - 1)), s.split(",",2)[1]));
+        JavaRDD<String> airports = getDataFromFile(sc, args[0]);
+        JavaRDD<String> schedule = getDataFromFile(sc, args[1]);
+        final Broadcast<Map<Integer,String>> airportsBroadcasted = getAirportBroadcasted(sc,airports);
         JavaPairRDD<Pair<Integer, Integer>, float[]> schedulePair = schedule.mapToPair(s -> {
             if (s.split(",")[17].length() > 0) {
                 return new Tuple2<>(new Pair<>(Integer.parseInt(s.split(",")[11]),Integer.parseInt(s.split(",")[14])), new float[]{Float.parseFloat(s.split(",")[17]),0,1,0,1});
@@ -52,8 +58,6 @@ public class Main {
             return arr1;
         });
         JavaPairRDD<Pair<Integer, Integer>, String> scheduleData = schedulePair.mapValues(arr -> "Max delay=" + arr[0] + "; Percent of delays = " + arr[2]/arr[4] * 100 + "%; Percent of cancelled = " + arr[3]/arr[4] * 100 + "%;" + arr[4]);
-        Map<Integer, String> kek = airportsPair.collectAsMap();
-        final Broadcast<Map<Integer,String>> airportsBroadcasted = sc.broadcast(kek);
         JavaRDD<String> output = scheduleData.map(data -> {
             int airportID1 = data._1.getKey();
             int airportID2 = data._1.getValue();
