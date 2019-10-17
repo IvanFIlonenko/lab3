@@ -5,12 +5,14 @@ import org.apache.spark.SparkConf;
 import org.apache.spark.api.java.JavaPairRDD;
 import org.apache.spark.api.java.JavaRDD;
 import org.apache.spark.api.java.JavaSparkContext;
+import org.apache.spark.broadcast.Broadcast;
 import scala.Int;
 import scala.Tuple2;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 public class Main {
     public static boolean isNumeric(String str) {
@@ -32,6 +34,8 @@ public class Main {
         final String header2 = schedule.first();
         schedule = schedule.filter(line -> !line.equals(header2));
         JavaPairRDD<Integer, String> airportsPair = airports.mapToPair(s -> new Tuple2<>(Integer.parseInt(s.split(",",2)[0]), s.split(",",2)[1]));
+        JavaRDD<Map<Integer, String >> kek = airports.map(s -> new Map<>(Integer.parseInt(s.split(",",2)[0]), s.split(",",2)[1]));
+        final Broadcast<Map<Integer,String>> airportsBroadcasted = sc.broadcast();
         JavaPairRDD<Pair<Integer, Integer>, float[]> schedulePair = schedule.mapToPair(s -> {
             if (s.split(",")[17].length() > 0) {
                 return new Tuple2<>(new Pair<>(Integer.parseInt(s.split(",")[11]),Integer.parseInt(s.split(",")[14])), new float[]{Float.parseFloat(s.split(",")[17]),0,1,0,1});
