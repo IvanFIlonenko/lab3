@@ -116,13 +116,6 @@ public class Main {
         JavaRDD<String> airports = getDataFromFile(sc, args[0]);
         JavaRDD<String> schedule = getDataFromFile(sc, args[1]);
         final Broadcast<Map<Integer,String>> airportsBroadcasted = getAirportBroadcasted(sc,airports);
-//        JavaPairRDD<Pair<Integer, Integer>, float[]> schedulePair = schedule.mapToPair(s -> {
-//            if (s.split(",")[17].length() > 0) {
-//                return new Tuple2<>(new Pair<>(Integer.parseInt(getAirportData(11,s,false)),Integer.parseInt(getAirportData(14,s,false))), new float[]{Float.parseFloat(s.split(",")[17]),0,1,0,1});
-//            } else {
-//                return new Tuple2<>(new Pair<>(Integer.parseInt(getAirportData(11,s,false)),Integer.parseInt(getAirportData(14,s,false))), new float[]{0,1,0,0,1});
-//            }
-//        });
         JavaPairRDD<Pair<Integer, Integer>, String> scheduleHandled = handleSchedule(schedule);
         JavaRDD<String> output = mapAirportsIDs(scheduleHandled, airportsBroadcasted);
         output.saveAsTextFile(args[2]);
