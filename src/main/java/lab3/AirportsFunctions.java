@@ -22,7 +22,7 @@ public class AirportsFunctions {
         if (isAirports){
             return getFromAirports(pos, s);
         } else {
-            return getFromSchedule(pos, s);
+            return ScheduleFunctions.getFromSchedule(pos, s);
         }
     }
 
