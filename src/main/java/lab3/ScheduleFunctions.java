@@ -47,14 +47,14 @@ public class ScheduleFunctions {
     }
 
     private static JavaPairRDD<Pair<Integer, Integer>, float[]> reduceSchedule(JavaPairRDD<Pair<Integer, Integer>, float[]> schedule){
-        return schedule.reduceByKey((arr1,arr2) -> {
-            arr1[NUMBER_OF_CANCELLED_POS] = arr1[NUMBER_OF_CANCELLED_POS] + arr1[IS_CANCELLED_POS] + arr2[IS_CANCELLED_POS] + arr2[NUMBER_OF_CANCELLED_POS];
-            arr1[NUMBER_OF_DELAYED_POS] += arr2[NUMBER_OF_DELAYED_POS];
-            if (arr1[MAX_DELAY_POS] <= arr2[MAX_DELAY_POS]) {
-                arr1[MAX_DELAY_POS] = arr2[MAX_DELAY_POS];
+        return schedule.reduceByKey((flightsInfo1,flightsInfo2) -> {
+            flightsInfo1[NUMBER_OF_CANCELLED_POS] = flightsInfo1[NUMBER_OF_CANCELLED_POS] + flightsInfo1[IS_CANCELLED_POS] + flightsInfo2[IS_CANCELLED_POS] + flightsInfo2[NUMBER_OF_CANCELLED_POS];
+            flightsInfo1[NUMBER_OF_DELAYED_POS] += flightsInfo2[NUMBER_OF_DELAYED_POS];
+            if (flightsInfo1[MAX_DELAY_POS] <= flightsInfo2[MAX_DELAY_POS]) {
+                flightsInfo1[MAX_DELAY_POS] = flightsInfo2[MAX_DELAY_POS];
             }
-            arr1[NUMBER_OF_FLIGHTS_POS] += arr2[NUMBER_OF_FLIGHTS_POS];
-            return arr1;
+            flightsInfo1[NUMBER_OF_FLIGHTS_POS] += flightsInfo2[NUMBER_OF_FLIGHTS_POS];
+            return flightsInfo1;
         });
     }
 
