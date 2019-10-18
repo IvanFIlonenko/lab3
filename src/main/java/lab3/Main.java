@@ -6,22 +6,10 @@ import org.apache.spark.api.java.JavaPairRDD;
 import org.apache.spark.api.java.JavaRDD;
 import org.apache.spark.api.java.JavaSparkContext;
 import org.apache.spark.broadcast.Broadcast;
-import scala.Tuple2;
 
 import java.util.*;
 
 public class Main {
-    private static final int AIRPORT_ID_POS= 0;
-    private static final int AIRPORT_NAME_POS = 1;
-    private static final int AIRPORT_ID_FROM_POS = 11;
-    private static final int AIRPORT_ID_TO_POS = 14;
-    private static final int DELAY_FLIGHT_POS = 17;
-    private static final int MAX_DELAY_POS = 0;
-    private static final int IS_CANCELLED_POS = 1;
-    private static final int NUMBER_OF_DELAYED_POS = 2;
-    private static final int NUMBER_OF_CANCELLED_POS = 3;
-    private static final int NUMBER_OF_FLIGHTS_POS = 4;
-
 
     private static JavaRDD<String> getDataFromFile(JavaSparkContext sc, String path){
         JavaRDD<String> data = sc.textFile(path).flatMap(s -> Arrays.stream(s.split("\t")).iterator());
@@ -40,7 +28,7 @@ public class Main {
             return info;
         });
     }
-    
+
 
     public static void main(String[] args){
         SparkConf conf = new SparkConf().setAppName("lab3");
