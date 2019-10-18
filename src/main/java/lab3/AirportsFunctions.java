@@ -25,4 +25,9 @@ public class AirportsFunctions {
             return getFromSchedule(pos, s);
         }
     }
+
+    private static String getFromAirports(int pos, String s){
+        String s_sub = s.split(",", 2)[pos];
+        return s_sub.substring(1,s_sub.length() - 1);
+    }
 }
