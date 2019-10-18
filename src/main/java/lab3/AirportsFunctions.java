@@ -18,7 +18,7 @@ public class AirportsFunctions {
         return sc.broadcast(airportsMap);
     }
 
-    private static String getAirportData(int pos, String s, boolean isAirports){
+    public static String getAirportData(int pos, String s, boolean isAirports){
         if (isAirports){
             return getFromAirports(pos, s);
         } else {

@@ -29,64 +29,6 @@ public class Main {
         return data.filter(line -> !line.equals(header));
     }
 
-    private static String getFromAirports(int pos, String s){
-        String s_sub = s.split(",", 2)[pos];
-        return s_sub.substring(1,s_sub.length() - 1);
-    }
-
-    private static String getFromSchedule(int pos, String s){
-        return s.split(",")[pos];
-    }
-
-    private static String getAirportData(int pos, String s, boolean isAirports){
-        if (isAirports){
-            return getFromAirports(pos, s);
-        } else {
-            return getFromSchedule(pos, s);
-        }
-    }
-
-    private static Broadcast<Map<Integer,String>> getAirportBroadcasted(JavaSparkContext sc, JavaRDD<String> airports){
-        JavaPairRDD<Integer, String> airportsPair = airports.mapToPair(s -> new Tuple2<>(Integer.parseInt(getAirportData(AIRPORT_ID_POS, s, true)), getAirportData(AIRPORT_NAME_POS, s, true)));
-        Map<Integer, String> airportsMap = airportsPair.collectAsMap();
-        return sc.broadcast(airportsMap);
-    }
-
-    private static JavaPairRDD<Pair<Integer, Integer>, float[]> createSchedulePair(JavaRDD<String> schedule){
-        return schedule.mapToPair(s -> {
-            Pair<Integer, Integer> airportsIDs = new Pair<>(Integer.parseInt(getAirportData(AIRPORT_ID_FROM_POS,s,false)),Integer.parseInt(getAirportData(AIRPORT_ID_TO_POS,s,false)));
-            float[] delayData = new float[]{0,0,0,0,1};
-            if (getAirportData(DELAY_FLIGHT_POS, s, false).length() > 0) {
-                delayData[MAX_DELAY_POS] = Float.parseFloat(getAirportData(DELAY_FLIGHT_POS,s,false));
-                delayData[NUMBER_OF_DELAYED_POS] = 1;
-            } else {
-                delayData[IS_CANCELLED_POS] = 1;
-            }
-            return new Tuple2<>(airportsIDs, delayData);
-        });
-    }
-
-    private static JavaPairRDD<Pair<Integer, Integer>, float[]> filterSchedule(JavaPairRDD<Pair<Integer, Integer>, float[]> schedule){
-        return schedule.filter(pair -> pair._2[MAX_DELAY_POS] >= 0);
-    }
-
-    private static JavaPairRDD<Pair<Integer, Integer>, float[]> reduceSchedule(JavaPairRDD<Pair<Integer, Integer>, float[]> schedule){
-        return schedule.reduceByKey((arr1,arr2) -> {
-            arr1[NUMBER_OF_CANCELLED_POS] = arr1[NUMBER_OF_CANCELLED_POS] + arr1[IS_CANCELLED_POS] + arr2[IS_CANCELLED_POS] + arr2[NUMBER_OF_CANCELLED_POS];
-            arr1[NUMBER_OF_DELAYED_POS] += arr2[NUMBER_OF_DELAYED_POS];
-            if (arr1[MAX_DELAY_POS] <= arr2[MAX_DELAY_POS]) {
-                arr1[MAX_DELAY_POS] = arr2[MAX_DELAY_POS];
-            }
-            arr1[NUMBER_OF_FLIGHTS_POS] += arr2[NUMBER_OF_FLIGHTS_POS];
-            return arr1;
-        });
-    }
-
-    private static JavaPairRDD<Pair<Integer, Integer>, String> convertDataToString(JavaPairRDD<Pair<Integer, Integer>, float[]> schedule){
-        return schedule.mapValues(arr -> "Max delay=" + arr[MAX_DELAY_POS] + "; Percent of delays = " + arr[NUMBER_OF_DELAYED_POS]/arr[NUMBER_OF_FLIGHTS_POS] * 100 +
-                "%; Percent of cancelled = " + arr[NUMBER_OF_CANCELLED_POS]/arr[NUMBER_OF_FLIGHTS_POS] * 100 + "%; Number of flights = " + arr[NUMBER_OF_FLIGHTS_POS]);
-    }
-
     private static JavaRDD<String> mapAirportsIDs(JavaPairRDD<Pair<Integer, Integer>, String> schedule, final Broadcast<Map<Integer,String>> airportsBroadcasted){
         return schedule.map(data -> {
             int airportID1 = data._1.getKey();
@@ -98,23 +40,15 @@ public class Main {
             return info;
         });
     }
-
-    private static JavaPairRDD<Pair<Integer, Integer>, String> handleSchedule(JavaRDD<String> schedule){
-        JavaPairRDD<Pair<Integer, Integer>, float[]> schedulePair = createSchedulePair(schedule);
-        JavaPairRDD<Pair<Integer, Integer>, float[]> scheduleFiltered = filterSchedule(schedulePair);
-        JavaPairRDD<Pair<Integer, Integer>, float[]> scheduleReduced = reduceSchedule(scheduleFiltered);
-        JavaPairRDD<Pair<Integer, Integer>, String> scheduleStringConverted = convertDataToString(scheduleReduced);
-        return scheduleStringConverted;
-    }
-
+    
 
     public static void main(String[] args){
         SparkConf conf = new SparkConf().setAppName("lab3");
         JavaSparkContext sc = new JavaSparkContext(conf);
         JavaRDD<String> airports = getDataFromFile(sc, args[0]);
         JavaRDD<String> schedule = getDataFromFile(sc, args[1]);
-        final Broadcast<Map<Integer,String>> airportsBroadcasted = getAirportBroadcasted(sc,airports);
-        JavaPairRDD<Pair<Integer, Integer>, String> scheduleHandled = handleSchedule(schedule);
+        final Broadcast<Map<Integer,String>> airportsBroadcasted = AirportsFunctions.getAirportBroadcasted(sc,airports);
+        JavaPairRDD<Pair<Integer, Integer>, String> scheduleHandled = ScheduleFunctions.handleSchedule(schedule);
         JavaRDD<String> output = mapAirportsIDs(scheduleHandled, airportsBroadcasted);
         output.saveAsTextFile(args[2]);
     }
