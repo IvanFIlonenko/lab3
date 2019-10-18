@@ -2,42 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="1ba93d8b-1502-4a74-a5de-2a8a290d8472" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/output/_SUCCESS" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/output/part-00000" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/output/part-00001" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/output21/_SUCCESS" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/output21/part-00000" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/output21/part-00001" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/output22/_SUCCESS" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/output22/part-00000" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/output22/part-00001" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/output23/_SUCCESS" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/output23/part-00000" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/output23/part-00001" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/output24/_SUCCESS" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/output24/part-00000" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/output24/part-00001" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/output25/_SUCCESS" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/output25/part-00000" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/output25/part-00001" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/output26/_SUCCESS" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/output26/part-00000" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/output26/part-00001" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/output27/_SUCCESS" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/output27/part-00000" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/output27/part-00001" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/output3/_SUCCESS" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/output3/part-00000" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/output3/part-00001" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/output31/_SUCCESS" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/output31/part-00000" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/output31/part-00001" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/output32/_SUCCESS" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/output32/part-00000" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/output32/part-00001" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/output4/_SUCCESS" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/output4/part-00000" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/output4/part-00001" beforeDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/lab3/AirportsFunctions.java" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
